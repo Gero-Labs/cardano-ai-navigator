@@ -1,6 +1,6 @@
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { ActivitySquare, Home, LayoutDashboard, LayoutGrid, Settings, BadgeCheck, Store } from "lucide-react";
+import { ActivitySquare, LayoutDashboard, Store, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppContext } from "@/contexts/AppContext";
 import {
@@ -10,7 +10,7 @@ import {
   SidebarFooter,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuLink,
+  SidebarMenuButton,
 } from "@/components/ui/sidebar";
 
 const Sidebar = () => {
@@ -52,9 +52,10 @@ const Sidebar = () => {
         <SidebarMenu>
           {routes.map((route) => (
             <SidebarMenuItem key={route.path}>
-              <SidebarMenuLink
-                href={route.path}
+              <SidebarMenuButton
+                asChild={!route.disabled}
                 disabled={route.disabled}
+                isActive={location.pathname === route.path}
                 onClick={(e) => {
                   if (route.disabled) {
                     e.preventDefault();
@@ -62,13 +63,20 @@ const Sidebar = () => {
                     navigate(route.path);
                   }
                 }}
-                className={cn(
-                  location.pathname === route.path && "bg-accent text-accent-foreground"
-                )}
+                tooltip={route.disabled ? "Coming soon" : undefined}
               >
-                <route.icon className="h-4 w-4 mr-2" />
-                <span>{route.name}</span>
-              </SidebarMenuLink>
+                {!route.disabled ? (
+                  <a href={route.path}>
+                    <route.icon className="h-4 w-4 mr-2" />
+                    <span>{route.name}</span>
+                  </a>
+                ) : (
+                  <>
+                    <route.icon className="h-4 w-4 mr-2" />
+                    <span>{route.name}</span>
+                  </>
+                )}
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -77,16 +85,16 @@ const Sidebar = () => {
       <SidebarFooter className="py-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuLink 
-              href="/settings"
-              onClick={(e) => navigate("/settings")}
-              className={cn(
-                location.pathname === "/settings" && "bg-accent text-accent-foreground"
-              )}
+            <SidebarMenuButton 
+              asChild
+              isActive={location.pathname === "/settings"}
+              onClick={() => navigate("/settings")}
             >
-              <Settings className="h-4 w-4 mr-2" />
-              <span>Settings</span>
-            </SidebarMenuLink>
+              <a href="/settings">
+                <Settings className="h-4 w-4 mr-2" />
+                <span>Settings</span>
+              </a>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
