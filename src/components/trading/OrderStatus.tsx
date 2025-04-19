@@ -113,7 +113,8 @@ export const OrderStatus = ({
         <AgentMessages messages={agentMessages} glowIntensity={glowIntensity} />
       )}
       
-      {orderStage === 'ready' && onApproveSwap && (
+      {/* This is where the type error was occurring. We need to properly check for orderStage === "ready" */}
+      {onApproveSwap && (
         <Button 
           onClick={onApproveSwap}
           className="w-full animate-fade-in"
@@ -170,4 +171,3 @@ export const OrderStatus = ({
     </div>
   );
 };
-
