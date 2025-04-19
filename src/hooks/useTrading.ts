@@ -132,7 +132,7 @@ export const useTrading = (walletBalance: number) => {
 
     const swapReview = await swapReviewPromise;
 
-    const unsignedTx = _.get(swapReview, "unsigned_tx");
+    const unsignedTx = _.get(swapReview, "data.unsigned_tx_cbor_hex");
     const signedTx = await wallet.signTx(unsignedTx);
     const txHash = await wallet.submitTx(signedTx);
   };
