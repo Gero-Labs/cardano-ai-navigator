@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/AppContext";
@@ -34,7 +33,7 @@ const OnboardingFlow = () => {
 
   const handleContinue = () => {
     if (selectedPlan) {
-      navigate("/deploy");
+      navigate("/trading");
     }
   };
 
