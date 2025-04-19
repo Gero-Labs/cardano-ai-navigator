@@ -20,9 +20,18 @@ interface PortfolioRiskReviewProps {
 export const PortfolioRiskReview = ({ currentRisk, recommendedSwaps }: PortfolioRiskReviewProps) => {
   const navigate = useNavigate();
   const [isExecuting, setIsExecuting] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
-  const handleProceed = () => {
+  const handleProceed = async () => {
+    // First set pending state to show confirmation button
+    if (!isPending) {
+      setIsPending(true);
+      return;
+    }
+
+    // If already pending and clicked again, execute the trade
     setIsExecuting(true);
+    
     // Skip trading window and show agent loading animations
     navigate('/deploy');
   };
@@ -65,6 +74,7 @@ export const PortfolioRiskReview = ({ currentRisk, recommendedSwaps }: Portfolio
         <Button 
           onClick={handleProceed} 
           disabled={isExecuting}
+          variant={isPending ? "destructive" : "default"}
           className="w-full"
         >
           {isExecuting ? (
@@ -72,10 +82,18 @@ export const PortfolioRiskReview = ({ currentRisk, recommendedSwaps }: Portfolio
               <Loader className="mr-2 h-4 w-4 animate-spin" />
               Proceeding to Agent Deployment...
             </>
+          ) : isPending ? (
+            'Click again to confirm and proceed'
           ) : (
             'Continue to Agent Deployment'
           )}
         </Button>
+        
+        {isPending && !isExecuting && (
+          <p className="text-sm text-center text-muted-foreground">
+            Please confirm to proceed with the deployment
+          </p>
+        )}
       </CardContent>
     </Card>
   );
