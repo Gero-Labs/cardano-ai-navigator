@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Wallet, ArrowRight, Exchange } from "lucide-react";
+import { Wallet, ArrowRight, ArrowLeftRight } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,7 +50,7 @@ const AgentTrading = () => {
         <Card>
           <CardHeader className="text-center">
             <div className="rounded-full bg-gradient-to-br from-purple-500 to-blue-600 p-3 inline-flex mx-auto mb-4">
-              <Exchange className="h-8 w-8 text-white" />
+              <ArrowLeftRight className="h-8 w-8 text-white" />
             </div>
             <CardTitle className="text-2xl font-bold">Deploy Trading Agent</CardTitle>
           </CardHeader>

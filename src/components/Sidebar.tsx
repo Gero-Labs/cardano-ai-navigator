@@ -1,5 +1,6 @@
+
 import { useNavigate, useLocation } from "react-router-dom";
-import { ActivitySquare, LayoutDashboard, Store, Settings, Exchange } from "lucide-react";
+import { ActivitySquare, LayoutDashboard, Store, Settings, ArrowLeftRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppContext } from "@/contexts/AppContext";
 import {
@@ -26,7 +27,7 @@ const Sidebar = () => {
     {
       name: "Trading",
       path: "/trading",
-      icon: Exchange,
+      icon: ArrowLeftRight,
     },
     {
       name: "Marketplace",

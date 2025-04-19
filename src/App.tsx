@@ -10,6 +10,7 @@ import OnboardingFlow from "./pages/OnboardingFlow";
 import DeployAgents from "./pages/DeployAgents";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import AgentTrading from "./pages/AgentTrading"; 
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 
