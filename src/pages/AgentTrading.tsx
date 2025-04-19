@@ -1,11 +1,10 @@
 
 import { useNavigate } from "react-router-dom";
-import { ArrowLeftRight, ArrowLeft, CircleCheck } from "lucide-react";
+import { ArrowLeftRight, ArrowLeft } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { OrderStatus } from "@/components/trading/OrderStatus";
-import { PortfolioRiskReview } from "@/components/trading/PortfolioRiskReview";
 import { useTrading } from "@/hooks/useTrading";
 
 const AgentTrading = () => {
@@ -16,6 +15,7 @@ const AgentTrading = () => {
     progress,
     agentMessages,
     handleApproveSwap,
+    isLoading,
   } = useTrading(wallet.balance || 0);
 
   const handleGoBack = () => {
@@ -52,6 +52,7 @@ const AgentTrading = () => {
               progress={progress}
               agentMessages={agentMessages}
               onApproveSwap={handleApproveSwap}
+              isLoading={isLoading}
             />
           </CardContent>
         </Card>

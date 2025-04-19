@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { MessageSquare, ArrowLeftRight, Check, Zap, Database, Link, LoaderCircle, CircleCheck, CircleArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import type { OrderStage } from "@/hooks/useTrading";
 
 interface OrderStatusProps {
@@ -9,14 +11,17 @@ interface OrderStatusProps {
   progress: number;
   agentMessages: string[];
   onApproveSwap?: () => void;
+  isLoading?: boolean;
 }
 
 export const OrderStatus = ({ 
   orderStage,
   progress,
   agentMessages,
-  onApproveSwap
+  onApproveSwap,
+  isLoading = false
 }: OrderStatusProps) => {
+  const navigate = useNavigate();
   const [glowIntensity, setGlowIntensity] = useState(0);
   
   useEffect(() => {
@@ -25,8 +30,6 @@ export const OrderStatus = ({
     }, 50);
     return () => clearInterval(intervalId);
   }, []);
-
-  if (orderStage === "creating") return null;
 
   const stages = {
     analyzing: {
@@ -46,6 +49,12 @@ export const OrderStatus = ({
       secondaryIcon: <CircleArrowRight className="h-5 w-5 text-green-400 absolute -top-1 -right-1" />,
       title: "Analysis Complete",
       description: "Review and approve the recommended swap"
+    },
+    success: {
+      icon: <CircleCheck className="h-8 w-8 text-green-500" />,
+      secondaryIcon: <Check className="h-5 w-5 text-green-400 absolute -top-1 -right-1" />,
+      title: "Swap Order Created",
+      description: "Your swap order has been successfully created"
     }
   };
 
@@ -61,6 +70,44 @@ export const OrderStatus = ({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [agentMessages]);
+
+  if (orderStage === "success") {
+    return (
+      <div className="space-y-6">
+        <div className="text-center space-y-4">
+          <div className="rounded-full bg-green-100 p-3 mx-auto w-fit">
+            <CircleCheck className="h-6 w-6 text-green-500" />
+          </div>
+          <h3 className="text-xl font-semibold">Swap Order Created Successfully</h3>
+          <p className="text-sm text-muted-foreground">
+            Your swap order has been created and will be executed shortly.
+          </p>
+          <div className="bg-accent/20 rounded-lg p-4 space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span>From:</span>
+              <span className="font-medium">100 ADA</span>
+            </div>
+            <div className="flex justify-between">
+              <span>To:</span>
+              <span className="font-medium">38 DJED</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Risk Reduction:</span>
+              <span className="text-green-500">-15%</span>
+            </div>
+          </div>
+          <Button 
+            className="w-full mt-4"
+            onClick={() => navigate("/dashboard")}
+          >
+            Return to Dashboard
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (orderStage === "creating") return null;
 
   return (
     <div className="space-y-6 relative">
@@ -155,9 +202,19 @@ export const OrderStatus = ({
           onClick={onApproveSwap}
           className="w-full animate-fade-in"
           size="lg"
+          disabled={isLoading}
         >
-          <CircleCheck className="mr-2 h-5 w-5" />
-          Approve Swap Order
+          {isLoading ? (
+            <>
+              <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />
+              Processing Swap...
+            </>
+          ) : (
+            <>
+              <CircleCheck className="mr-2 h-5 w-5" />
+              Approve Swap Order
+            </>
+          )}
         </Button>
       )}
       

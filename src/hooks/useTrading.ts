@@ -9,6 +9,8 @@ export type Token = {
   balance: number;
 };
 
+export type OrderStage = "analyzing" | "recommending" | "ready" | "success";
+
 export const tokens: Token[] = [
   { symbol: "ADA", name: "Cardano", balance: 0 },
   { symbol: "DJED", name: "Djed Stablecoin", balance: 100 },
@@ -17,14 +19,13 @@ export const tokens: Token[] = [
   { symbol: "WMT", name: "World Mobile", balance: 500 },
 ];
 
-export type OrderStage = "analyzing" | "recommending" | "ready";
-
 export const useTrading = (walletBalance: number) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [orderStage, setOrderStage] = useState<OrderStage>("analyzing");
   const [progress, setProgress] = useState(0);
   const [agentMessages, setAgentMessages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const simulateAgentAnalysis = async () => {
     const messages = [
@@ -59,13 +60,13 @@ export const useTrading = (walletBalance: number) => {
   }, []);
 
   const handleApproveSwap = async () => {
-    toast({
-      title: "Swap Order Created",
-      description: "Your swap order has been created and is ready for execution",
-    });
+    setIsLoading(true);
     
-    // Navigate to deploy page for final confirmation
-    navigate("/deploy");
+    // Simulate swap processing
+    await new Promise(resolve => setTimeout(resolve, 10000));
+    
+    setOrderStage("success");
+    setIsLoading(false);
   };
 
   return {
@@ -73,5 +74,6 @@ export const useTrading = (walletBalance: number) => {
     progress,
     agentMessages,
     handleApproveSwap,
+    isLoading,
   };
 };
