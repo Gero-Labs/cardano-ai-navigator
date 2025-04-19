@@ -1,35 +1,45 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ActivitySquare, ChevronRight, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppContext } from "@/contexts/AppContext";
+import _ from "lodash";
 import { cn } from "@/lib/utils";
+import { WalletId } from "@/types/wallet";
+import { BrowserWallet } from "@meshsdk/core";
 
 interface WalletOption {
-  id: string;
+  id: WalletId;
   name: string;
   logo: string;
   installed?: boolean;
 }
 
 const walletOptions: WalletOption[] = [
-  { id: "vespr", name: "Vespr Wallet", logo: "https://vespr.xyz/assets/vespr-logo-6aa1e29e.svg", installed: true },
-  { id: "gero", name: "Gero Wallet", logo: "https://gerowallet.io/assets/img/logo.svg", installed: true },
-  { id: "eternl", name: "Eternl Wallet", logo: "https://eternl.io/icons/icon-48x48.png", installed: true },
-  { id: "nami", name: "Nami Wallet", logo: "https://namiwallet.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fnami-1.4c2e5662.webp&w=256&q=75", installed: false },
+  {
+    id: WalletId.vespr,
+    name: _.get(window, `cardano.${WalletId.vespr}.name`),
+    logo: _.get(window, `cardano.${WalletId.vespr}.icon`),
+    installed: true,
+  },
+  {
+    id: WalletId.gero,
+    name: _.get(window, `cardano.${WalletId.gero}.name`),
+    logo: _.get(window, `cardano.${WalletId.gero}.icon`),
+    installed: true,
+  },
 ];
 
 const ConnectWallet = () => {
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const [selectedWalletId, setSelectedWalletId] = useState<string | null>(null);
+  const { setWallet } = useAppContext();
   const [isConnecting, setIsConnecting] = useState(false);
-  const { wallet } = useAppContext();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleConnect = async () => {
-    if (!selectedWallet) {
+    if (!selectedWalletId) {
       toast({
         title: "No wallet selected",
         description: "Please select a wallet to connect",
@@ -42,13 +52,11 @@ const ConnectWallet = () => {
 
     try {
       // Connect wallet using the CIP-30 API
-      wallet.connect(selectedWallet);
-      
-      // Navigate to onboarding after successful connection
-      setTimeout(() => {
-        setIsConnecting(false);
-        navigate("/onboarding");
-      }, 1500);
+      const connectedWallet = await BrowserWallet.enable(selectedWalletId);
+      setWallet(connectedWallet);
+
+      setIsConnecting(false);
+      navigate("/onboarding");
     } catch (error) {
       setIsConnecting(false);
       toast({
@@ -70,25 +78,28 @@ const ConnectWallet = () => {
           </div>
           <h1 className="text-3xl font-bold mb-2">Cardano AI Navigator</h1>
           <p className="text-muted-foreground">
-            Connect your Cardano wallet to deploy AI agents for automated portfolio management
+            Connect your Cardano wallet to deploy AI agents for automated
+            portfolio management
           </p>
         </div>
 
         <div className="bg-card rounded-xl shadow-lg p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Connect Wallet</h2>
-          
+
           <div className="space-y-3 mb-6">
             {walletOptions.map((option) => (
               <div
                 key={option.id}
                 className={cn(
                   "border rounded-lg p-4 cursor-pointer transition-colors flex items-center justify-between",
-                  selectedWallet === option.id
+                  selectedWalletId === option.id
                     ? "border-primary bg-accent"
                     : "hover:border-primary/50",
                   !option.installed && "opacity-50"
                 )}
-                onClick={() => option.installed && setSelectedWallet(option.id)}
+                onClick={() =>
+                  option.installed && setSelectedWalletId(option.id)
+                }
               >
                 <div className="flex items-center">
                   <div className="w-8 h-8 mr-3 flex-shrink-0 bg-white rounded-full p-1 flex items-center justify-center">
@@ -101,11 +112,13 @@ const ConnectWallet = () => {
                   <div>
                     <p className="font-medium">{option.name}</p>
                     {!option.installed && (
-                      <span className="text-sm text-muted-foreground">Not installed</span>
+                      <span className="text-sm text-muted-foreground">
+                        Not installed
+                      </span>
                     )}
                   </div>
                 </div>
-                {selectedWallet === option.id && (
+                {selectedWalletId === option.id && (
                   <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
                     <div className="h-2 w-2 rounded-full bg-white"></div>
                   </div>
@@ -117,7 +130,7 @@ const ConnectWallet = () => {
           <Button
             className="w-full"
             size="lg"
-            disabled={!selectedWallet || isConnecting}
+            disabled={!selectedWalletId || isConnecting}
             onClick={handleConnect}
           >
             {isConnecting ? (
@@ -132,16 +145,19 @@ const ConnectWallet = () => {
               </div>
             )}
           </Button>
-          
+
           <p className="text-xs text-center text-muted-foreground mt-4">
-            By connecting your wallet, you agree to our Terms of Service and Privacy Policy
+            By connecting your wallet, you agree to our Terms of Service and
+            Privacy Policy
           </p>
         </div>
 
         <div className="bg-card rounded-xl shadow-sm p-4 flex justify-between items-center">
           <div>
             <h3 className="font-medium">New to Cardano?</h3>
-            <p className="text-sm text-muted-foreground">Learn how to create a wallet</p>
+            <p className="text-sm text-muted-foreground">
+              Learn how to create a wallet
+            </p>
           </div>
           <Button variant="outline" size="sm">
             Learn More

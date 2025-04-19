@@ -20,30 +20,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Currency, Plan } from "@/types/plans";
+import { RiskLevel } from "@/types/risk";
+import { formatCurrency } from "@/utils/currency";
 
 const OnboardingFlow = () => {
-  const { wallet, selectPlan, setRiskLevel, selectedPlan, selectedRiskLevel, adaUsdPrice } = useAppContext();
+  const {
+    wallet,
+    selectPlan,
+    setRiskLevel,
+    selectedPlan,
+    selectedRiskLevel,
+    adaUsdPrice,
+    currencyType,
+    setCurrencyType,
+  } = useAppContext();
   const navigate = useNavigate();
   const plans = usePlans();
-  const [currencyType, setCurrencyType] = useState<"USD" | "ADA">("USD");
 
-  const handleSelectPlan = (plan: any) => {
+  if (!wallet) {
+    navigate("/");
+  }
+
+  const handleSelectPlan = (plan: Plan) => {
     selectPlan(plan);
   };
 
   const handleContinue = () => {
     if (selectedPlan) {
-      navigate("/trading");
-    }
-  };
-
-  const formatCurrency = (price: number): string => {
-    if (currencyType === "USD") {
-      return `$${price.toFixed(2)}`;
-    } else {
-      // Convert USD to ADA
-      const adaAmount = price / adaUsdPrice;
-      return `₳${adaAmount.toFixed(2)}`;
+      navigate("/deploy");
     }
   };
 
@@ -57,22 +62,32 @@ const OnboardingFlow = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="USD" className="mb-8">
+        <Tabs defaultValue={Currency.ADA} className="mb-8">
           <div className="flex justify-center mb-4">
             <TabsList>
-              <TabsTrigger value="USD" onClick={() => setCurrencyType("USD")}>USD</TabsTrigger>
-              <TabsTrigger value="ADA" onClick={() => setCurrencyType("ADA")}>ADA</TabsTrigger>
+              <TabsTrigger
+                value="ADA"
+                onClick={() => setCurrencyType(Currency.ADA)}
+              >
+                ADA
+              </TabsTrigger>
+              <TabsTrigger
+                value="USD"
+                onClick={() => setCurrencyType(Currency.USD)}
+              >
+                USD
+              </TabsTrigger>
             </TabsList>
           </div>
         </Tabs>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {plans.map((plan) => (
-            <Card 
-              key={plan.id} 
+            <Card
+              key={plan.id}
               className={`transition-all hover:shadow-md ${
-                selectedPlan?.id === plan.id 
-                  ? "border-primary ring-2 ring-primary ring-opacity-50" 
+                selectedPlan?.id === plan.id
+                  ? "border-primary ring-2 ring-primary ring-opacity-50"
                   : ""
               }`}
             >
@@ -85,7 +100,7 @@ const OnboardingFlow = () => {
                 </CardTitle>
                 <CardDescription>
                   <div className="text-2xl font-bold mt-2">
-                    {formatCurrency(plan.price)}
+                    {formatCurrency(plan.price, currencyType, adaUsdPrice)}
                     <span className="text-sm font-normal text-muted-foreground ml-1">
                       /month
                     </span>
@@ -105,9 +120,9 @@ const OnboardingFlow = () => {
                   <label className="block text-sm font-medium mb-1">
                     Risk Level
                   </label>
-                  <Select 
-                    defaultValue="balanced" 
-                    onValueChange={(value: any) => setRiskLevel(value)}
+                  <Select
+                    defaultValue="balanced"
+                    onValueChange={(value: RiskLevel) => setRiskLevel(value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select risk level" />
@@ -121,7 +136,7 @@ const OnboardingFlow = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button 
+                <Button
                   className="w-full"
                   variant={selectedPlan?.id === plan.id ? "default" : "outline"}
                   onClick={() => handleSelectPlan(plan)}
@@ -134,7 +149,7 @@ const OnboardingFlow = () => {
         </div>
 
         <div className="flex justify-center">
-          <Button 
+          <Button
             size="lg"
             disabled={!selectedPlan}
             onClick={handleContinue}

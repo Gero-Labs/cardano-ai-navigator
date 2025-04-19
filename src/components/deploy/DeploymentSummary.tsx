@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardHeader,
@@ -8,13 +7,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Shield } from "lucide-react";
+import { useAppContext } from "@/contexts/AppContext";
+import { formatCurrency } from "@/utils/currency";
 
 interface DeploymentSummaryProps {
   selectedPlan: { name: string; price: number };
   selectedRiskLevel: string;
   isDeploying: boolean;
   onDeploy: () => void;
-  isRecommendationOnly?: boolean;
 }
 
 export const DeploymentSummary = ({
@@ -22,18 +22,15 @@ export const DeploymentSummary = ({
   selectedRiskLevel,
   isDeploying,
   onDeploy,
-  isRecommendationOnly = false,
 }: DeploymentSummaryProps) => {
+  const { currencyType, adaUsdPrice } = useAppContext();
+
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>
-          {isRecommendationOnly ? "Portfolio Analysis" : "Deployment Summary"}
-        </CardTitle>
+        <CardTitle>Deployment Summary</CardTitle>
         <CardDescription>
-          {isRecommendationOnly
-            ? "Review your selections before analysis"
-            : "Review your selections before deploying"}
+          Review your selections before deploying
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -44,13 +41,17 @@ export const DeploymentSummary = ({
         <div className="flex justify-between items-center pb-2 border-b">
           <span className="text-muted-foreground">Risk Level:</span>
           <div className="flex items-center">
-            <div className={`h-3 w-3 rounded-full mr-2 bg-risk-${selectedRiskLevel}`}></div>
+            <div
+              className={`h-3 w-3 rounded-full mr-2 bg-risk-${selectedRiskLevel}`}
+            ></div>
             <span className="font-medium capitalize">{selectedRiskLevel}</span>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">Monthly Cost:</span>
-          <span className="font-medium">${selectedPlan.price.toFixed(2)}</span>
+          <span className="font-medium">
+            {formatCurrency(selectedPlan.price, currencyType, adaUsdPrice)}
+          </span>
         </div>
         <div className="pt-4">
           <Button
@@ -62,19 +63,17 @@ export const DeploymentSummary = ({
             {isDeploying ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                <span>{isRecommendationOnly ? "Analyzing..." : "Deploying..."}</span>
+                <span>Deploying...</span>
               </>
             ) : (
               <>
                 <Shield className="mr-2 h-4 w-4" />
-                <span>{isRecommendationOnly ? "Analyze Portfolio" : "Deploy Agents"}</span>
+                <span>Deploy Agents</span>
               </>
             )}
           </Button>
           <p className="text-xs text-center text-muted-foreground mt-4">
-            {isRecommendationOnly
-              ? "Our AI will analyze your portfolio and provide recommendations only"
-              : "By deploying, you'll sign a transaction to mint AI agent NFTs"}
+            By deploying, you'll sign a transaction to mint AI agent NFTs
           </p>
         </div>
       </CardContent>

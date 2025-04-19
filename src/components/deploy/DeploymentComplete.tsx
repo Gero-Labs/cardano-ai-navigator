@@ -1,25 +1,22 @@
-
 import { Check } from "lucide-react";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 interface DeploymentCompleteProps {
   onContinue: () => void;
-  isRecommendationOnly?: boolean;
 }
 
-export const DeploymentComplete = ({ onContinue, isRecommendationOnly = false }: DeploymentCompleteProps) => {
+export const DeploymentComplete = ({ onContinue }: DeploymentCompleteProps) => {
   return (
     <Card className="relative overflow-hidden">
       <div className="absolute inset-0">
-        <img 
-          src="/lovable-uploads/1460e200-7e39-4f5b-a1c9-f54d366fe342.png" 
+        <img
+          src="/lovable-uploads/1460e200-7e39-4f5b-a1c9-f54d366fe342.png"
           alt="Gradient background"
           className="w-full h-full object-cover opacity-50"
         />
@@ -28,25 +25,19 @@ export const DeploymentComplete = ({ onContinue, isRecommendationOnly = false }:
         <div className="mx-auto rounded-full bg-primary/10 p-3 backdrop-blur-sm">
           <Check className="h-6 w-6 text-primary" />
         </div>
-        <CardTitle className="text-center mt-4">Analysis Complete!</CardTitle>
+        <CardTitle className="text-center mt-4">Deployment Complete!</CardTitle>
         <CardDescription className="text-center">
-          {isRecommendationOnly
-            ? "Our AI agents have analyzed your portfolio and prepared recommendations"
-            : "Your AI agents have been successfully deployed"}
+          Your AI agents have been successfully deployed
         </CardDescription>
-      </CardHeader>
-      <CardContent className="relative z-10">
         <Button
           variant="outline"
           className="w-full mt-4"
           onClick={onContinue}
           size="lg"
         >
-          {isRecommendationOnly
-            ? "View Recommendations"
-            : "Continue to Dashboard"}
+          Continue to Dashboard
         </Button>
-      </CardContent>
+      </CardHeader>
     </Card>
   );
 };

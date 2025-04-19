@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftRight, ArrowLeft } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
@@ -10,19 +9,14 @@ import { useTrading } from "@/hooks/useTrading";
 const AgentTrading = () => {
   const navigate = useNavigate();
   const { wallet } = useAppContext();
-  const {
-    orderStage,
-    progress,
-    agentMessages,
-    handleApproveSwap,
-    isLoading,
-  } = useTrading(wallet.balance || 0);
+  const { orderStage, progress, agentMessages, handleApproveSwap, isLoading } =
+    useTrading(0);
 
   const handleGoBack = () => {
     navigate("/");
   };
 
-  if (!wallet.isConnected) {
+  if (!wallet) {
     navigate("/");
     return null;
   }
@@ -32,9 +26,9 @@ const AgentTrading = () => {
       <div className="max-w-md w-full mx-auto">
         <Card className="shadow-lg">
           <CardHeader className="text-center relative">
-            <Button 
-              variant="outline" 
-              size="icon" 
+            <Button
+              variant="outline"
+              size="icon"
               className="absolute left-4 top-1/2 -translate-y-1/2"
               onClick={handleGoBack}
             >
@@ -45,7 +39,7 @@ const AgentTrading = () => {
             </div>
             <CardTitle className="text-2xl font-bold">AI Analysis</CardTitle>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             <OrderStatus
               orderStage={orderStage}

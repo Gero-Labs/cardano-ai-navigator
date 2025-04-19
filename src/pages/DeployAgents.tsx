@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/AppContext";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,29 +27,22 @@ const DeployAgents = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-accent p-4">
       <div className="max-w-md w-full mx-auto">
         {isDeploymentComplete ? (
-          <DeploymentComplete 
-            onContinue={handleContinue} 
-            isRecommendationOnly={true}
-          />
+          <DeploymentComplete onContinue={handleContinue} />
         ) : (
           <>
             <DeploymentHeader />
-            
-            <DeploymentSummary 
+
+            <DeploymentSummary
               selectedPlan={selectedPlan}
               selectedRiskLevel={selectedRiskLevel}
               isDeploying={isDeploying}
               onDeploy={handleDeploy}
-              isRecommendationOnly={true}
             />
 
             {isDeploying && (
               <Card>
                 <CardContent className="pt-6">
-                  <DeploymentProgress 
-                    deploymentStep={deploymentStep} 
-                    isRecommendationOnly={true}
-                  />
+                  <DeploymentProgress deploymentStep={deploymentStep} />
                 </CardContent>
               </Card>
             )}
