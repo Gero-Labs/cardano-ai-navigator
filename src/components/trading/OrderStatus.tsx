@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { Loader, MessageSquare, ArrowLeftRight, Check, Zap, Database, Link, LoaderCircle, CircleCheck, CircleArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -105,7 +106,11 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
                     ${isEven ? 'self-start' : 'self-end flex-row-reverse'} 
                     max-w-[85%] animate-fade-in
                   `}
-                  style={{ animationDelay: `${index * 0.3}s` }}
+                  style={{ 
+                    animationDelay: `${index * 0.5}s`, // Increased delay for slower, smoother appearance
+                    opacity: 0, // Ensure initial opacity is 0 for fade-in effect
+                    animation: 'fade-in 0.7s ease-out forwards' // Longer, smoother fade-in
+                  }}
                 >
                   <div 
                     className="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center relative"
