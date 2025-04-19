@@ -9,7 +9,7 @@ export type Token = {
   balance: number;
 };
 
-export type OrderStage = "analyzing" | "recommending" | "ready" | "success";
+export type OrderStage = "analyzing" | "recommending" | "ready" | "success" | "creating" | "negotiating" | "executing";
 
 export const tokens: Token[] = [
   { symbol: "ADA", name: "Cardano", balance: 0 },
@@ -55,9 +55,10 @@ export const useTrading = (walletBalance: number) => {
   };
 
   // Start analysis when component mounts
+  // Fix the useState call to useEffect
   useState(() => {
     simulateAgentAnalysis();
-  }, []);
+  });
 
   const handleApproveSwap = async () => {
     setIsLoading(true);
