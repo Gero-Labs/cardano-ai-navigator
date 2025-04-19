@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from 'react';
 import { Loader, MessageSquare, ArrowLeftRight, Check, Zap, Database, Link, LoaderCircle, CircleCheck, CircleArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { OrderStage } from "@/hooks/useTrading";
@@ -56,9 +55,14 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
     return colors[index % colors.length];
   };
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [agentMessages]);
+
   return (
     <div className="space-y-6 relative">
-      {/* Futuristic background elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden rounded-lg">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-gradient-to-br from-transparent via-accent/30 to-transparent animate-spin-slow opacity-30" 
           style={{ animationDuration: '30s' }} />
@@ -74,7 +78,6 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
         <p className="text-base text-muted-foreground text-center max-w-xs">{currentStage.description}</p>
       </div>
       
-      {/* Animated progress tracker */}
       <div className="relative">
         <Progress value={progress} className="h-2 w-full" />
         <div 
@@ -87,7 +90,6 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
         />
       </div>
       
-      {/* Agent conversation visualization */}
       {agentMessages.length > 0 && (
         <div className="mt-6 space-y-0 bg-accent/30 backdrop-blur-sm rounded-lg p-4 max-h-52 overflow-y-auto border border-accent/50 shadow-[0_0_15px_rgba(123,90,224,0.2)]">
           <div className="flex flex-col gap-2">
@@ -103,7 +105,7 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
                     ${isEven ? 'self-start' : 'self-end flex-row-reverse'} 
                     max-w-[85%] animate-fade-in
                   `}
-                  style={{ animationDelay: `${index * 0.15}s` }}
+                  style={{ animationDelay: `${index * 0.3}s` }}
                 >
                   <div 
                     className="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center relative"
@@ -134,11 +136,11 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
                 </div>
               );
             })}
+            <div ref={messagesEndRef} />
           </div>
         </div>
       )}
       
-      {/* Data streams visualization */}
       {(orderStage === "negotiating" || orderStage === "executing") && (
         <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
           {Array.from({ length: 5 }).map((_, idx) => (
