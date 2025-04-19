@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { OrderStage } from "@/hooks/useTrading";
+import { SwapRecommendation } from "./SwapRecommendation";
+import type { OrderStage, Token } from "@/hooks/useTrading";
 
 interface OrderStatusProps {
   orderStage: OrderStage;
@@ -89,6 +90,9 @@ export const OrderStatus = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [agentMessages]);
 
+  const mockFromToken: Token = { symbol: "ADA", name: "Cardano", balance: 100 };
+  const mockToToken: Token = { symbol: "DJED", name: "DJED Stablecoin", balance: 38 };
+
   if (orderStage === "success") {
     return (
       <div className="space-y-6">
@@ -122,6 +126,20 @@ export const OrderStatus = ({
           </Button>
         </div>
       </div>
+    );
+  }
+
+  if (orderStage === "ready") {
+    return (
+      <SwapRecommendation
+        fromToken={mockFromToken}
+        toToken={mockToToken}
+        fromAmount={100}
+        toAmount={38}
+        riskReduction={15}
+        onApprove={onApproveSwap!}
+        isLoading={isLoading}
+      />
     );
   }
 

@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -54,11 +53,9 @@ export const useTrading = (walletBalance: number) => {
     setProgress(100);
   };
 
-  // Start analysis when component mounts
-  // Fix the useState call to useEffect
-  useState(() => {
+  useEffect(() => {
     simulateAgentAnalysis();
-  });
+  }, []); // Run only once when component mounts
 
   const handleApproveSwap = async () => {
     setIsLoading(true);
