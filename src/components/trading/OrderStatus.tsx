@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { MessageSquare, ArrowLeftRight, Check, Zap, Database, Link, LoaderCircle, CircleCheck, CircleArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -252,7 +253,7 @@ export const OrderStatus = ({
         </Button>
       )}
       
-      {(orderStage === "negotiating" || orderStage === "executing") && (
+      {(orderStage === "negotiating" || orderStage === "executing" || orderStage === "creating") && (
         <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
           {Array.from({ length: 5 }).map((_, idx) => (
             <div 
