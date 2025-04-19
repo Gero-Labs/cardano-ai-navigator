@@ -2,14 +2,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/AppContext";
-import { Shield } from "lucide-react";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { DeploymentProgress } from "@/components/deploy/DeploymentProgress";
 import { DeploymentSummary } from "@/components/deploy/DeploymentSummary";
 import { DeploymentComplete } from "@/components/deploy/DeploymentComplete";
+import { DeploymentHeader } from "@/components/deploy/DeploymentHeader";
 
 const DeployAgents = () => {
   const { selectedPlan, selectedRiskLevel, deployAgents } = useAppContext();
@@ -26,19 +23,15 @@ const DeployAgents = () => {
   const handleDeploy = async () => {
     setIsDeploying(true);
     
-    // Step 1: Initializing
     setDeploymentStep(1);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
-    // Step 2: Signing transaction
     setDeploymentStep(2);
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
-    // Step 3: Deploying agents
     setDeploymentStep(3);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     
-    // Step 4: Complete
     const success = await deployAgents();
     setDeploymentStep(4);
     setIsDeploymentComplete(true);
@@ -52,16 +45,8 @@ const DeployAgents = () => {
           <DeploymentComplete onContinue={() => navigate("/dashboard")} />
         ) : (
           <>
-            <div className="text-center mb-8">
-              <div className="rounded-full bg-gradient-to-br from-purple-500 to-blue-600 p-3 inline-flex mb-4">
-                <Shield className="h-8 w-8 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold mb-2">Deploy Your AI Agents</h1>
-              <p className="text-muted-foreground">
-                Your agents are ready to be deployed to your wallet
-              </p>
-            </div>
-
+            <DeploymentHeader />
+            
             <DeploymentSummary 
               selectedPlan={selectedPlan}
               selectedRiskLevel={selectedRiskLevel}
