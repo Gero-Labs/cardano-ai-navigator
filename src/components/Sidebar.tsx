@@ -26,6 +26,9 @@ const Sidebar = () => {
     },
     {
       name: "Agents",
+      // Fix: Update this to correctly point to the settings page
+      // This was pointing to /settings earlier which is correct, 
+      // but let's make it clear this is intentional
       path: "/settings",
       icon: ActivitySquare,
     },
@@ -60,6 +63,7 @@ const Sidebar = () => {
                   if (route.disabled) {
                     e.preventDefault();
                   } else {
+                    e.preventDefault(); // Prevent default to avoid full page reload
                     navigate(route.path);
                   }
                 }}
@@ -88,7 +92,10 @@ const Sidebar = () => {
             <SidebarMenuButton 
               asChild
               isActive={location.pathname === "/settings"}
-              onClick={() => navigate("/settings")}
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default to avoid full page reload
+                navigate("/settings");
+              }}
             >
               <a href="/settings">
                 <Settings className="h-4 w-4 mr-2" />
