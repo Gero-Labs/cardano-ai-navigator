@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Wallet, ArrowDown, ArrowLeftRight } from "lucide-react";
+import { Wallet, ArrowDown, ArrowLeftRight, MessageSquare, Loader, Check } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
 
 const AgentTrading = () => {
   const navigate = useNavigate();
@@ -25,9 +25,11 @@ const AgentTrading = () => {
   const [orderType, setOrderType] = useState("market");
   const [agentPreferences, setAgentPreferences] = useState("");
   
-  // UI state
+  // Enhanced UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderStage, setOrderStage] = useState("creating"); // creating, finding, executed
+  const [orderStage, setOrderStage] = useState("creating"); // creating, finding, negotiating, executing, completed
+  const [progress, setProgress] = useState(0);
+  const [agentMessages, setAgentMessages] = useState<string[]>([]);
 
   // Token options
   const tokens = [
@@ -89,6 +91,21 @@ const AgentTrading = () => {
     setBuyAmount(tempSellAmount);
   };
 
+  const simulateAgentCommunication = async () => {
+    const messages = [
+      `Agent #${Math.floor(Math.random() * 1000)}: Received order for ${sellAmount} ${sellToken}`,
+      `Agent #${Math.floor(Math.random() * 1000)}: Proposing exchange rate of ${calculateEquivalent(sellAmount, sellToken, buyToken)} ${buyToken}`,
+      `Verifying liquidity and order conditions...`,
+      `Agreement reached. Preparing transaction...`,
+      `Executing secure wallet-to-wallet transfer...`
+    ];
+
+    for (const message of messages) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setAgentMessages(prev => [...prev, message]);
+    }
+  };
+
   const handleSubmitOrder = async () => {
     if (!sellAmount || !buyAmount) {
       toast({
@@ -122,47 +139,102 @@ const AgentTrading = () => {
     }
 
     setIsSubmitting(true);
+    setAgentMessages([]);
+    
+    // Order creation
     setOrderStage("finding");
-    
-    // Simulate AI agent matching process
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setOrderStage("executed");
-    
-    // Simulate swap execution delay
+    setProgress(25);
     await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Finding matching agent
+    setProgress(50);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setOrderStage("negotiating");
+    
+    // Simulate agent communication
+    await simulateAgentCommunication();
+    
+    // Execute trade
+    setProgress(75);
+    setOrderStage("executing");
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Complete trade
+    setProgress(100);
+    setOrderStage("completed");
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     toast({
       title: "Order Executed Successfully",
       description: `Swapped ${sellAmount} ${sellToken} for ${buyAmount} ${buyToken}`,
     });
     
-    setIsSubmitting(false);
-    setOrderStage("creating");
-    setSellAmount("");
-    setBuyAmount("");
+    // Reset form
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setOrderStage("creating");
+      setProgress(0);
+      setSellAmount("");
+      setBuyAmount("");
+      setAgentMessages([]);
+    }, 2000);
   };
   
   const getOrderStatusContent = () => {
-    switch (orderStage) {
-      case "finding":
-        return (
-          <div className="text-center py-4 space-y-2">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p>AI agents are matching your order...</p>
+    const stages = {
+      finding: {
+        icon: <Loader className="h-6 w-6 animate-spin text-primary" />,
+        title: "Finding AI Agents",
+        description: "Publishing order to the network..."
+      },
+      negotiating: {
+        icon: <MessageSquare className="h-6 w-6 text-primary animate-pulse" />,
+        title: "Agents Negotiating",
+        description: "AI agents are communicating to match your order..."
+      },
+      executing: {
+        icon: <ArrowLeftRight className="h-6 w-6 text-primary animate-bounce" />,
+        title: "Executing Trade",
+        description: "Finalizing the secure wallet-to-wallet transfer..."
+      },
+      completed: {
+        icon: <Check className="h-6 w-6 text-green-500" />,
+        title: "Trade Complete",
+        description: "Your order has been successfully executed!"
+      }
+    };
+
+    if (orderStage === "creating") return null;
+
+    const currentStage = stages[orderStage as keyof typeof stages];
+
+    return (
+      <div className="space-y-4">
+        <div className="flex flex-col items-center justify-center py-4 space-y-2">
+          <div className="rounded-full bg-accent p-3">
+            {currentStage.icon}
           </div>
-        );
-      case "executed":
-        return (
-          <div className="text-center py-4 space-y-2">
-            <div className="rounded-full bg-green-100 p-2 inline-flex mx-auto">
-              <ArrowLeftRight className="h-6 w-6 text-green-600" />
-            </div>
-            <p className="text-green-600 font-medium">Order matched and executed!</p>
+          <h3 className="font-semibold text-lg">{currentStage.title}</h3>
+          <p className="text-sm text-muted-foreground">{currentStage.description}</p>
+        </div>
+        
+        <Progress value={progress} className="w-full" />
+        
+        {agentMessages.length > 0 && (
+          <div className="mt-4 space-y-2 bg-accent/50 rounded-lg p-4 max-h-40 overflow-y-auto">
+            {agentMessages.map((message, index) => (
+              <div 
+                key={index}
+                className="text-sm animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                {message}
+              </div>
+            ))}
           </div>
-        );
-      default:
-        return null;
-    }
+        )}
+      </div>
+    );
   };
 
   return (
