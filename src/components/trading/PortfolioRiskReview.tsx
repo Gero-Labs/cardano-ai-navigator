@@ -21,19 +21,21 @@ export const PortfolioRiskReview = ({ currentRisk, recommendedSwaps }: Portfolio
   const navigate = useNavigate();
   const [isExecuting, setIsExecuting] = useState(false);
   const [isPending, setIsPending] = useState(false);
+  const [showRecommendationsOnly, setShowRecommendationsOnly] = useState(false);
 
   const handleProceed = async () => {
     // First set pending state to show confirmation button
-    if (!isPending) {
+    if (!isPending && !showRecommendationsOnly) {
       setIsPending(true);
       return;
     }
 
-    // If already pending and clicked again, execute the trade
-    setIsExecuting(true);
-    
-    // Skip trading window and show agent loading animations
-    navigate('/deploy');
+    // If already pending and clicked again, show recommendations only
+    if (isPending && !showRecommendationsOnly) {
+      setShowRecommendationsOnly(true);
+      // Skip trading window and show agent loading animations
+      navigate('/deploy');
+    }
   };
 
   return (
@@ -80,18 +82,18 @@ export const PortfolioRiskReview = ({ currentRisk, recommendedSwaps }: Portfolio
           {isExecuting ? (
             <>
               <Loader className="mr-2 h-4 w-4 animate-spin" />
-              Proceeding to Agent Deployment...
+              Preparing Recommendations...
             </>
           ) : isPending ? (
-            'Click again to confirm and proceed'
+            'Click again to view AI recommendations only'
           ) : (
-            'Continue to Agent Deployment'
+            'Continue to Agent Recommendations'
           )}
         </Button>
         
         {isPending && !isExecuting && (
           <p className="text-sm text-center text-muted-foreground">
-            Please confirm to proceed with the deployment
+            We'll only show recommendations, no trades will be executed
           </p>
         )}
       </CardContent>

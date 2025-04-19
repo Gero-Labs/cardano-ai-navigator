@@ -14,6 +14,7 @@ interface DeploymentSummaryProps {
   selectedRiskLevel: string;
   isDeploying: boolean;
   onDeploy: () => void;
+  isRecommendationOnly?: boolean;
 }
 
 export const DeploymentSummary = ({
@@ -21,13 +22,18 @@ export const DeploymentSummary = ({
   selectedRiskLevel,
   isDeploying,
   onDeploy,
+  isRecommendationOnly = false,
 }: DeploymentSummaryProps) => {
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>Deployment Summary</CardTitle>
+        <CardTitle>
+          {isRecommendationOnly ? "Portfolio Analysis" : "Deployment Summary"}
+        </CardTitle>
         <CardDescription>
-          Review your selections before deploying
+          {isRecommendationOnly
+            ? "Review your selections before analysis"
+            : "Review your selections before deploying"}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -56,17 +62,19 @@ export const DeploymentSummary = ({
             {isDeploying ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                <span>Deploying...</span>
+                <span>{isRecommendationOnly ? "Analyzing..." : "Deploying..."}</span>
               </>
             ) : (
               <>
                 <Shield className="mr-2 h-4 w-4" />
-                <span>Deploy Agents</span>
+                <span>{isRecommendationOnly ? "Analyze Portfolio" : "Deploy Agents"}</span>
               </>
             )}
           </Button>
           <p className="text-xs text-center text-muted-foreground mt-4">
-            By deploying, you'll sign a transaction to mint AI agent NFTs
+            {isRecommendationOnly
+              ? "Our AI will analyze your portfolio and provide recommendations only"
+              : "By deploying, you'll sign a transaction to mint AI agent NFTs"}
           </p>
         </div>
       </CardContent>

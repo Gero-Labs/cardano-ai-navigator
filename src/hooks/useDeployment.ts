@@ -1,7 +1,7 @@
 
 import { useState } from "react";
-import { useAppContext } from "@/contexts/AppContext";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "@/contexts/AppContext";
 
 export const useDeployment = () => {
   const { deployAgents } = useAppContext();
@@ -22,13 +22,15 @@ export const useDeployment = () => {
     setDeploymentStep(3);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     
-    const success = await deployAgents();
+    // Just prepare recommendations, don't execute any trades
+    await deployAgents();
     setDeploymentStep(4);
     setIsDeploymentComplete(true);
     setIsDeploying(false);
   };
 
   const handleContinue = () => {
+    // Navigate to dashboard to see recommendations
     navigate("/dashboard");
   };
 

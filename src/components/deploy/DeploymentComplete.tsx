@@ -5,14 +5,16 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 interface DeploymentCompleteProps {
   onContinue: () => void;
+  isRecommendationOnly?: boolean;
 }
 
-export const DeploymentComplete = ({ onContinue }: DeploymentCompleteProps) => {
+export const DeploymentComplete = ({ onContinue, isRecommendationOnly = false }: DeploymentCompleteProps) => {
   return (
     <Card className="relative overflow-hidden">
       <div className="absolute inset-0">
@@ -26,19 +28,25 @@ export const DeploymentComplete = ({ onContinue }: DeploymentCompleteProps) => {
         <div className="mx-auto rounded-full bg-primary/10 p-3 backdrop-blur-sm">
           <Check className="h-6 w-6 text-primary" />
         </div>
-        <CardTitle className="text-center mt-4">Deployment Complete!</CardTitle>
+        <CardTitle className="text-center mt-4">Analysis Complete!</CardTitle>
         <CardDescription className="text-center">
-          Your AI agents have been successfully deployed
+          {isRecommendationOnly
+            ? "Our AI agents have analyzed your portfolio and prepared recommendations"
+            : "Your AI agents have been successfully deployed"}
         </CardDescription>
+      </CardHeader>
+      <CardContent className="relative z-10">
         <Button
           variant="outline"
           className="w-full mt-4"
           onClick={onContinue}
           size="lg"
         >
-          Continue to Dashboard
+          {isRecommendationOnly
+            ? "View Recommendations"
+            : "Continue to Dashboard"}
         </Button>
-      </CardHeader>
+      </CardContent>
     </Card>
   );
 };
