@@ -1,16 +1,22 @@
-
 import React, { useEffect, useState, useRef } from 'react';
-import { Loader, MessageSquare, ArrowLeftRight, Check, Zap, Database, Link, LoaderCircle, CircleCheck, CircleArrowRight } from "lucide-react";
+import { MessageSquare, ArrowLeftRight, Check, Zap, Database, Link, LoaderCircle, CircleCheck, CircleArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import type { OrderStage } from "@/hooks/useTrading";
 
 interface OrderStatusProps {
   orderStage: OrderStage;
   progress: number;
   agentMessages: string[];
+  onApproveSwap?: () => void;
 }
 
-export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatusProps) => {
+export const OrderStatus = ({ 
+  orderStage,
+  progress,
+  agentMessages,
+  onApproveSwap
+}: OrderStatusProps) => {
   const [glowIntensity, setGlowIntensity] = useState(0);
   
   useEffect(() => {
@@ -23,29 +29,23 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
   if (orderStage === "creating") return null;
 
   const stages = {
-    finding: {
+    analyzing: {
       icon: <LoaderCircle className="h-8 w-8 animate-spin text-primary" />,
       secondaryIcon: <Database className="h-5 w-5 text-blue-400 absolute -top-1 -right-1 animate-pulse" />,
-      title: "Finding AI Agents",
-      description: "Publishing order to the network..."
+      title: "Analyzing Portfolio",
+      description: "AI agents are analyzing your portfolio..."
     },
-    negotiating: {
+    recommending: {
       icon: <MessageSquare className="h-8 w-8 text-primary" />,
       secondaryIcon: <Zap className="h-5 w-5 text-yellow-400 absolute -top-1 -right-1 animate-pulse" />,
-      title: "Agents Negotiating",
-      description: "AI agents are communicating to match your order..."
+      title: "Generating Recommendations",
+      description: "AI agents are preparing swap recommendations..."
     },
-    executing: {
-      icon: <ArrowLeftRight className="h-8 w-8 text-primary" />,
-      secondaryIcon: <Link className="h-5 w-5 text-purple-400 absolute -top-1 -right-1 animate-pulse" />,
-      title: "Executing Trade",
-      description: "Finalizing the secure wallet-to-wallet transfer..."
-    },
-    completed: {
+    ready: {
       icon: <CircleCheck className="h-8 w-8 text-green-500" />,
       secondaryIcon: <CircleArrowRight className="h-5 w-5 text-green-400 absolute -top-1 -right-1" />,
-      title: "Trade Complete",
-      description: "Your order has been successfully executed!"
+      title: "Analysis Complete",
+      description: "Review and approve the recommended swap"
     }
   };
 
@@ -75,8 +75,12 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
           {currentStage.icon}
           {currentStage.secondaryIcon}
         </div>
-        <h3 className="font-bold text-2xl bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">{currentStage.title}</h3>
-        <p className="text-base text-muted-foreground text-center max-w-xs">{currentStage.description}</p>
+        <h3 className="font-bold text-2xl bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">
+          {currentStage.title}
+        </h3>
+        <p className="text-base text-muted-foreground text-center max-w-xs">
+          {currentStage.description}
+        </p>
       </div>
       
       <div className="relative">
@@ -107,9 +111,9 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
                     max-w-[85%] animate-fade-in
                   `}
                   style={{ 
-                    animationDelay: `${index * 0.5}s`, // Increased delay for slower, smoother appearance
-                    opacity: 0, // Ensure initial opacity is 0 for fade-in effect
-                    animation: 'fade-in 0.7s ease-out forwards' // Longer, smoother fade-in
+                    animationDelay: `${index * 0.5}s`,
+                    opacity: 0,
+                    animation: 'fade-in 0.7s ease-out forwards'
                   }}
                 >
                   <div 
@@ -144,6 +148,17 @@ export const OrderStatus = ({ orderStage, progress, agentMessages }: OrderStatus
             <div ref={messagesEndRef} />
           </div>
         </div>
+      )}
+      
+      {orderStage === 'ready' && onApproveSwap && (
+        <Button 
+          onClick={onApproveSwap}
+          className="w-full animate-fade-in"
+          size="lg"
+        >
+          <CircleCheck className="mr-2 h-5 w-5" />
+          Approve Swap Order
+        </Button>
       )}
       
       {(orderStage === "negotiating" || orderStage === "executing") && (

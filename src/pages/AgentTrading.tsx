@@ -1,55 +1,21 @@
 
 import { useNavigate } from "react-router-dom";
-import { ArrowLeftRight, ArrowLeft } from "lucide-react";
+import { ArrowLeftRight, ArrowLeft, CircleCheck } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useTrading } from "@/hooks/useTrading";
 import { OrderStatus } from "@/components/trading/OrderStatus";
-import { TradingForm } from "@/components/trading/TradingForm";
 import { PortfolioRiskReview } from "@/components/trading/PortfolioRiskReview";
-
-const mockRecommendedSwaps = [
-  {
-    fromToken: "ADA",
-    toToken: "DJED",
-    reason: "Reduce exposure to market volatility",
-    riskReduction: 15
-  },
-  {
-    fromToken: "WMT",
-    toToken: "SHEN",
-    reason: "Balance portfolio with stable assets",
-    riskReduction: 10
-  }
-];
+import { useTrading } from "@/hooks/useTrading";
 
 const AgentTrading = () => {
   const navigate = useNavigate();
-  const { wallet, adaUsdPrice } = useAppContext();
-  
+  const { wallet } = useAppContext();
   const {
-    sellToken,
-    buyToken,
-    sellAmount,
-    buyAmount,
-    slippage,
-    orderType,
-    agentPreferences,
-    isSubmitting,
     orderStage,
     progress,
     agentMessages,
-    availableTokens,
-    setSellToken,
-    setBuyToken,
-    setSlippage,
-    setOrderType,
-    setAgentPreferences,
-    handleSellAmountChange,
-    handleBuyAmountChange,
-    handleSwapTokens,
-    handleSubmitOrder,
+    handleApproveSwap,
   } = useTrading(wallet.balance || 0);
 
   const handleGoBack = () => {
@@ -60,51 +26,6 @@ const AgentTrading = () => {
     navigate("/");
     return null;
   }
-
-  const renderContent = () => {
-    if (orderStage === "completed") {
-      return (
-        <PortfolioRiskReview
-          currentRisk={7}
-          recommendedSwaps={mockRecommendedSwaps}
-        />
-      );
-    }
-
-    if (orderStage === "creating") {
-      return (
-        <TradingForm
-          sellToken={sellToken}
-          buyToken={buyToken}
-          sellAmount={sellAmount}
-          buyAmount={buyAmount}
-          slippage={slippage}
-          orderType={orderType}
-          agentPreferences={agentPreferences}
-          isSubmitting={isSubmitting}
-          tokens={availableTokens}
-          adaUsdPrice={adaUsdPrice}
-          onSellTokenChange={setSellToken}
-          onBuyTokenChange={setBuyToken}
-          onSellAmountChange={handleSellAmountChange}
-          onBuyAmountChange={handleBuyAmountChange}
-          onSlippageChange={setSlippage}
-          onOrderTypeChange={setOrderType}
-          onAgentPreferencesChange={setAgentPreferences}
-          onSwapTokens={handleSwapTokens}
-          onSubmit={handleSubmitOrder}
-        />
-      );
-    }
-
-    return (
-      <OrderStatus
-        orderStage={orderStage}
-        progress={progress}
-        agentMessages={agentMessages}
-      />
-    );
-  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-accent p-4">
@@ -122,11 +43,16 @@ const AgentTrading = () => {
             <div className="rounded-full bg-gradient-to-br from-purple-500 to-blue-600 p-3 inline-flex mx-auto mb-4">
               <ArrowLeftRight className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-2xl font-bold">AI Trade Agent</CardTitle>
+            <CardTitle className="text-2xl font-bold">AI Analysis</CardTitle>
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {renderContent()}
+            <OrderStatus
+              orderStage={orderStage}
+              progress={progress}
+              agentMessages={agentMessages}
+              onApproveSwap={handleApproveSwap}
+            />
           </CardContent>
         </Card>
       </div>
