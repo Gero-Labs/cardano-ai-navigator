@@ -20,45 +20,12 @@ interface PortfolioRiskReviewProps {
 export const PortfolioRiskReview = ({ currentRisk, recommendedSwaps }: PortfolioRiskReviewProps) => {
   const navigate = useNavigate();
   const [isExecuting, setIsExecuting] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
 
-  const handleProceed = async () => {
+  const handleProceed = () => {
     setIsExecuting(true);
-    // Simulate blockchain confirmation time
-    await new Promise(resolve => setTimeout(resolve, 10000));
-    setIsExecuting(false);
-    setIsCompleted(true);
+    // Skip trading window and show agent loading animations
+    navigate('/deploy');
   };
-
-  const handleReturnToDashboard = () => {
-    navigate('/');
-  };
-
-  if (isCompleted) {
-    return (
-      <Card className="shadow-lg">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Swap Executed Successfully</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="text-center space-y-4">
-            <div className="text-green-500 bg-green-500/10 rounded-full p-4 w-fit mx-auto">
-              <CircleGauge className="h-12 w-12" />
-            </div>
-            <p className="text-muted-foreground">
-              Your portfolio risk level has been optimized through the executed swaps
-            </p>
-            <Button 
-              onClick={handleReturnToDashboard}
-              className="w-full"
-            >
-              Return to Dashboard
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card className="shadow-lg">
@@ -103,10 +70,10 @@ export const PortfolioRiskReview = ({ currentRisk, recommendedSwaps }: Portfolio
           {isExecuting ? (
             <>
               <Loader className="mr-2 h-4 w-4 animate-spin" />
-              Executing Swaps...
+              Proceeding to Agent Deployment...
             </>
           ) : (
-            'Proceed with Recommended Swaps'
+            'Continue to Agent Deployment'
           )}
         </Button>
       </CardContent>
