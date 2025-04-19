@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,23 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				cardano: {
+					primary: '#0033AD',
+					secondary: '#1D45B8',
+					light: '#5E72EB',
+					dark: '#101942',
+				},
+				agent: {
+					success: '#4ADE80',
+					warning: '#FACC15',
+					error: '#F87171',
+					paused: '#94A3B8',
+				},
+				risk: {
+					conservative: '#4ADE80',
+					balanced: '#FACC15',
+					risky: '#F87171',
 				}
 			},
 			borderRadius: {
@@ -84,12 +102,28 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-slow': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.7' },
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-5px)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+				'float': 'float 3s ease-in-out infinite'
+			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+			},
+			boxShadow: {
+				'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
