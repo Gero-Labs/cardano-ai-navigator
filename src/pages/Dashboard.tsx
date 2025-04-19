@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import AgentCard from "@/components/AgentCard";
+import { AgentActivity } from "@/components/agents/AgentActivity";
 
 interface PortfolioStats {
   totalValue: number;
@@ -40,7 +40,6 @@ const Dashboard = () => {
   });
   const [selectedTimeframe, setSelectedTimeframe] = useState("daily");
 
-  // Mock portfolio stats update
   useEffect(() => {
     const interval = setInterval(() => {
       setStats((prevStats) => {
@@ -196,89 +195,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Token Allocation</CardTitle>
-            <CardDescription>
-              Current distribution of your portfolio
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-cardano-primary mr-2"></div>
-                  <span>ADA</span>
-                </div>
-                <span className="font-medium">
-                  {selectedRiskLevel === "conservative" ? "40%" :
-                    selectedRiskLevel === "balanced" ? "50%" : "20%"}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-cardano-secondary mr-2"></div>
-                  <span>Stablecoins</span>
-                </div>
-                <span className="font-medium">
-                  {selectedRiskLevel === "conservative" ? "60%" :
-                    selectedRiskLevel === "balanced" ? "20%" : "0%"}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-cardano-light mr-2"></div>
-                  <span>Mid-cap Tokens</span>
-                </div>
-                <span className="font-medium">
-                  {selectedRiskLevel === "conservative" ? "0%" :
-                    selectedRiskLevel === "balanced" ? "30%" : "20%"}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-primary mr-2"></div>
-                  <span>High Volatility</span>
-                </div>
-                <span className="font-medium">
-                  {selectedRiskLevel === "conservative" ? "0%" :
-                    selectedRiskLevel === "balanced" ? "0%" : "60%"}
-                </span>
-              </div>
-
-              <div className="w-full h-2 bg-secondary rounded-full mt-6 flex overflow-hidden">
-                <div 
-                  className="h-full bg-cardano-primary"
-                  style={{ 
-                    width: selectedRiskLevel === "conservative" ? "40%" : 
-                      selectedRiskLevel === "balanced" ? "50%" : "20%" 
-                  }}
-                ></div>
-                <div 
-                  className="h-full bg-cardano-secondary"
-                  style={{ 
-                    width: selectedRiskLevel === "conservative" ? "60%" : 
-                      selectedRiskLevel === "balanced" ? "20%" : "0%" 
-                  }}
-                ></div>
-                <div 
-                  className="h-full bg-cardano-light"
-                  style={{ 
-                    width: selectedRiskLevel === "conservative" ? "0%" : 
-                      selectedRiskLevel === "balanced" ? "30%" : "20%" 
-                  }}
-                ></div>
-                <div 
-                  className="h-full bg-primary"
-                  style={{ 
-                    width: selectedRiskLevel === "conservative" ? "0%" : 
-                      selectedRiskLevel === "balanced" ? "0%" : "60%" 
-                  }}
-                ></div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <AgentActivity />
       </div>
 
       <h2 className="text-xl font-semibold pt-2">Agents Running</h2>
