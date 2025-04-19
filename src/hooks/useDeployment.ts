@@ -20,24 +20,21 @@ export const useDeployment = () => {
     setDeploymentStep(1);
     try {
       const walletAddress = (await wallet.getUsedAddresses())[0];
-      const tx = await axios.post(
-        "https://api-preprod.vespr.xyz/v4/wallet/txprepare",
-        {
-          address: walletAddress,
-          destinations: [
-            {
-              address: COMPANY_ADDRESS.preprod,
-              assets: [
-                {
-                  policy_id: "",
-                  hex_asset_name: "416461",
-                  quantity: 1 * 1_000_000,
-                },
-              ],
-            },
-          ],
-        }
-      );
+      const tx = await axios.post("https://api.vespr.xyz/v4/wallet/txprepare", {
+        address: walletAddress,
+        destinations: [
+          {
+            address: COMPANY_ADDRESS.mainnet,
+            assets: [
+              {
+                policy_id: "",
+                hex_asset_name: "416461",
+                quantity: 1 * 1_000_000,
+              },
+            ],
+          },
+        ],
+      });
 
       const unsignedTx = _.get(tx, "data.unsigned_tx");
       const signedTx = await wallet.signTx(unsignedTx);

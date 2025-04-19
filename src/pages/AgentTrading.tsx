@@ -16,11 +16,6 @@ const AgentTrading = () => {
     navigate("/");
   };
 
-  if (!wallet) {
-    navigate("/");
-    return null;
-  }
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-accent p-4">
       <div className="max-w-md w-full mx-auto">
