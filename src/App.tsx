@@ -26,6 +26,7 @@ const App = () => (
             <Route path="/" element={<ConnectWallet />} />
             <Route path="/onboarding" element={<OnboardingFlow />} />
             <Route path="/deploy" element={<DeployAgents />} />
+            <Route path="/trading" element={<AgentTrading />} /> 
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/settings" element={<Settings />} />

@@ -1,6 +1,5 @@
-
 import { useNavigate, useLocation } from "react-router-dom";
-import { ActivitySquare, LayoutDashboard, Store, Settings } from "lucide-react";
+import { ActivitySquare, LayoutDashboard, Store, Settings, Exchange } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppContext } from "@/contexts/AppContext";
 import {
@@ -25,12 +24,9 @@ const Sidebar = () => {
       icon: LayoutDashboard,
     },
     {
-      name: "Agents",
-      // Fix: Update this to correctly point to the settings page
-      // This was pointing to /settings earlier which is correct, 
-      // but let's make it clear this is intentional
-      path: "/settings",
-      icon: ActivitySquare,
+      name: "Trading",
+      path: "/trading",
+      icon: Exchange,
     },
     {
       name: "Marketplace",
