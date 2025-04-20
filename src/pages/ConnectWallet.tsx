@@ -18,15 +18,15 @@ interface WalletOption {
 
 const walletOptions: WalletOption[] = [
   {
-    id: WalletId.vespr,
-    name: _.get(window, `cardano.${WalletId.vespr}.name`),
-    logo: _.get(window, `cardano.${WalletId.vespr}.icon`),
-    installed: true,
-  },
-  {
     id: WalletId.gero,
     name: _.get(window, `cardano.${WalletId.gero}.name`),
     logo: _.get(window, `cardano.${WalletId.gero}.icon`),
+    installed: true,
+  },
+  {
+    id: WalletId.vespr,
+    name: _.get(window, `cardano.${WalletId.vespr}.name`),
+    logo: _.get(window, `cardano.${WalletId.vespr}.icon`),
     installed: true,
   },
 ];
@@ -72,11 +72,19 @@ const ConnectWallet = () => {
       <div className="max-w-md w-full mx-auto">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="rounded-full bg-gradient-to-br from-purple-500 to-blue-600 p-3 inline-flex">
-              <ActivitySquare className="h-8 w-8 text-white" />
+            <div
+              className="rounded-full p-3 inline-flex"
+              style={{
+                borderRadius: "50px !important",
+                width: 100,
+                height: 100,
+                overflow: "hidden",
+              }}
+            >
+              <img src="/lovable-uploads/balance_ai_logo.png" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold mb-2">Cardano AI Navigator</h1>
+          <h1 className="text-3xl font-bold mb-2">Balance AI</h1>
           <p className="text-muted-foreground">
             Connect your Cardano wallet to deploy AI agents for automated
             portfolio management

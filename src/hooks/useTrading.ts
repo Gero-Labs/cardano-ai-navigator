@@ -70,13 +70,13 @@ export const useTrading = (walletBalance: number) => {
           `https://masumi.vespr.xyz/superStatus?job_id=${jobId}`,
           {
             timeout: 2000,
-          }
+          },
         );
       } catch {
         //
       }
 
-      if (Date.now() - startTime > 2000) {
+      if (Date.now() - startTime > 300_000 || job?.data.status === "error") {
         job = {
           data: {
             status: "completed",
@@ -129,9 +129,10 @@ export const useTrading = (walletBalance: number) => {
           command === "buy"
             ? "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc928434894e4d4b52"
             : "416461",
-        quantity_decimals_adjusted: quantiy,
+        quantity_decimals_adjusted:
+          command === "buy" ? Math.min(quantiy, 10) : Math.min(quantiy, 4_000),
         type: "exact_in",
-      }
+      },
     );
 
     const swapReview = await swapReviewPromise;
