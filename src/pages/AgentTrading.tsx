@@ -9,8 +9,7 @@ import { useTrading } from "@/hooks/useTrading";
 const AgentTrading = () => {
   const navigate = useNavigate();
   const { wallet } = useAppContext();
-  const { orderStage, progress, agentMessages, handleApproveSwap, isLoading } =
-    useTrading(0);
+  const { orderStage, progress, agentMessages, handleApproveSwap, isLoading, command, quantity } = useTrading(0);
 
   const handleGoBack = () => {
     navigate("/");
@@ -42,6 +41,8 @@ const AgentTrading = () => {
               agentMessages={agentMessages}
               onApproveSwap={handleApproveSwap}
               isLoading={isLoading}
+              command={command}
+              quantity={quantity}
             />
           </CardContent>
         </Card>

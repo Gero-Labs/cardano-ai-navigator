@@ -15,6 +15,8 @@ interface OrderStatusProps {
   agentMessages: string[];
   onApproveSwap?: () => void;
   isLoading?: boolean;
+  command?: string;
+  quantity?: number;
 }
 
 export const OrderStatus = ({ 
@@ -22,7 +24,9 @@ export const OrderStatus = ({
   progress,
   agentMessages,
   onApproveSwap,
-  isLoading = false
+  isLoading = false,
+  command,
+  quantity
 }: OrderStatusProps) => {
   const navigate = useNavigate();
   const [glowIntensity, setGlowIntensity] = useState(0);
@@ -35,7 +39,7 @@ export const OrderStatus = ({
   }, []);
 
   const mockFromToken: Token = { symbol: "ADA", name: "Cardano", balance: 100 };
-  const mockToToken: Token = { symbol: "DJED", name: "DJED Stablecoin", balance: 38 };
+  const mockToToken: Token = { symbol: "NMKR", name: "$NMKR", balance: 38 };
 
   if (orderStage === "success") {
     return (
@@ -51,11 +55,11 @@ export const OrderStatus = ({
           <div className="bg-accent/20 rounded-lg p-4 space-y-2 text-sm">
             <div className="flex justify-between">
               <span>From:</span>
-              <span className="font-medium">100 ADA</span>
+              <span className="font-medium">{quantity} { command === 'buy' ? 'ADA' : 'NMKR' }</span>
             </div>
             <div className="flex justify-between">
               <span>To:</span>
-              <span className="font-medium">38 DJED</span>
+              <span className="font-medium">38 { command === 'buy' ? 'NMKR' : 'ADA' }</span>
             </div>
             <div className="flex justify-between">
               <span>Risk Reduction:</span>
@@ -76,10 +80,11 @@ export const OrderStatus = ({
   if (orderStage === "ready") {
     return (
       <SwapRecommendation
+        command={command}
         fromToken={mockFromToken}
         toToken={mockToToken}
         fromAmount={100}
-        toAmount={38}
+        toAmount={quantity}
         riskReduction={15}
         onApprove={onApproveSwap!}
         isLoading={isLoading}
@@ -112,10 +117,10 @@ export const OrderStatus = ({
       {agentMessages.length > 0 && (
         <AgentMessages messages={agentMessages} glowIntensity={glowIntensity} />
       )}
-      
+
       {/* This is where the type error was occurring. We need to properly check for orderStage === "ready" */}
       {onApproveSwap && (
-        <Button 
+        <Button
           onClick={onApproveSwap}
           className="w-full animate-fade-in"
           size="lg"

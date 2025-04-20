@@ -13,6 +13,7 @@ interface SwapRecommendationProps {
   riskReduction: number;
   onApprove: () => void;
   isLoading?: boolean;
+  command?: string;
 }
 
 export const SwapRecommendation = ({
@@ -22,7 +23,8 @@ export const SwapRecommendation = ({
   toAmount,
   riskReduction,
   onApprove,
-  isLoading = false
+  isLoading = false,
+  command
 }: SwapRecommendationProps) => {
   return (
     <Card className="p-6 space-y-6 bg-gradient-to-br from-purple-900/20 to-blue-900/10 backdrop-blur-sm border border-purple-500/20">
@@ -38,10 +40,10 @@ export const SwapRecommendation = ({
         <div className="flex flex-col items-center gap-2">
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 p-0.5">
             <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
-              <span className="text-lg font-bold">A</span>
+              <span className="text-lg font-bold">{command === 'buy' ? fromToken.symbol.slice(0,1) : toToken.symbol.slice(0,1)}</span>
             </div>
           </div>
-          <span className="font-medium">{fromToken.symbol}</span>
+          <span className="font-medium">{command === 'buy' ? fromToken.symbol : toToken.symbol}</span>
         </div>
 
         <div className="flex flex-col items-center">
@@ -52,35 +54,27 @@ export const SwapRecommendation = ({
         <div className="flex flex-col items-center gap-2">
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 p-0.5">
             <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
-              <span className="text-lg font-bold">D</span>
+              <span className="text-lg font-bold">{command === 'buy' ? toToken.symbol.slice(0,1) : fromToken.symbol.slice(0,1)}</span>
             </div>
           </div>
-          <span className="font-medium">{toToken.symbol}</span>
+          <span className="font-medium">{command === 'buy' ? toToken.symbol : fromToken.symbol}</span>
         </div>
       </div>
 
       <div className="space-y-3 bg-accent/30 rounded-lg p-4">
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">You send</span>
-          <span className="font-medium text-destructive">- {fromAmount} {fromToken.symbol}</span>
+          <span className="font-medium text-destructive">- {command === 'buy' ? fromAmount : toAmount} {command === 'buy' ? fromToken.symbol : toToken.symbol}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">You receive</span>
-          <span className="font-medium text-green-500">+ {toAmount} {toToken.symbol}</span>
+          <span className="font-medium text-green-500">+ {command === 'buy' ? toAmount : fromAmount} {command === 'buy' ? toToken.symbol : fromToken.symbol}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">Risk reduction</span>
           <span className="font-medium text-green-500">-{riskReduction}%</span>
         </div>
       </div>
-
-      <Button 
-        className="w-full"
-        onClick={onApprove}
-        disabled={isLoading}
-      >
-        {isLoading ? "Processing..." : "Approve Swap"}
-      </Button>
     </Card>
   );
 };

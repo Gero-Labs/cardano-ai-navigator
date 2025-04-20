@@ -22,7 +22,7 @@ export type OrderStage =
 
 export const tokens: Token[] = [
   { symbol: "ADA", name: "Cardano", balance: 0 },
-  { symbol: "DJED", name: "Djed Stablecoin", balance: 100 },
+  { symbol: "NMKR", name: "$NMKR", balance: 100 },
   { symbol: "SHEN", name: "Shen", balance: 50 },
   { symbol: "MIN", name: "Minswap", balance: 250 },
   { symbol: "WMT", name: "World Mobile", balance: 500 },
@@ -35,6 +35,8 @@ export const useTrading = (walletBalance: number) => {
   const [progress, setProgress] = useState(0);
   const [agentMessages, setAgentMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [command, setCommand] = useState<"buy" | "sell" | "hold">("buy");
+  const [quantity, setQuantity] = useState(0);
   const { wallet } = useAppContext();
 
   const simulateAgentAnalysis = async () => {
@@ -74,7 +76,7 @@ export const useTrading = (walletBalance: number) => {
         //
       }
 
-      if (Date.now() - startTime > 300_000) {
+      if (Date.now() - startTime > 2000) {
         job = {
           data: {
             status: "completed",
@@ -108,6 +110,8 @@ export const useTrading = (walletBalance: number) => {
 
     setOrderStage("ready");
     setProgress(100);
+    setCommand(command);
+    setQuantity(quantiy);
 
     const swapReviewPromise = axios.post(
       "https://api.vespr.xyz/v4/wallet/swap/review",
@@ -157,5 +161,7 @@ export const useTrading = (walletBalance: number) => {
     agentMessages,
     handleApproveSwap,
     isLoading,
+    command,
+    quantity
   };
 };
