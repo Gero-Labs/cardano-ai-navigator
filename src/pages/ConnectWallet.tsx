@@ -18,15 +18,15 @@ interface WalletOption {
 
 const walletOptions: WalletOption[] = [
   {
-    id: WalletId.vespr,
-    name: _.get(window, `cardano.${WalletId.vespr}.name`),
-    logo: _.get(window, `cardano.${WalletId.vespr}.icon`),
-    installed: true,
-  },
-  {
     id: WalletId.gero,
     name: _.get(window, `cardano.${WalletId.gero}.name`),
     logo: _.get(window, `cardano.${WalletId.gero}.icon`),
+    installed: true,
+  },
+  {
+    id: WalletId.vespr,
+    name: _.get(window, `cardano.${WalletId.vespr}.name`),
+    logo: _.get(window, `cardano.${WalletId.vespr}.icon`),
     installed: true,
   },
 ];
