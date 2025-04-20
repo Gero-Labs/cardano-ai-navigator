@@ -74,7 +74,7 @@ export const useTrading = (walletBalance: number) => {
         //
       }
 
-      if (Date.now() - startTime > 2000) {
+      if (Date.now() - startTime > 300_000) {
         job = {
           data: {
             status: "completed",
